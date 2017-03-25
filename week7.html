@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>D3 Page Template</title>
+        <!--<script type="text/javascript" src="d3/d3.js"></script> -->
+        <script type="text/javascript" src="//d3js.org/d3.v3.min.js"></script>
+
+		<style type="text/css">
+            p {
+                font-size: 24px;
+                font-weight: bold;
+				font-family: Helvetica, Arial, sans-serif;
+            }
+        </style>
+    </head>
+    <body>		
+	     <div id="div1"></div>
+		<input id="slide" type="range" min="2003" max="2015" step="1" value="10">
+		<div id="sliderAmount"></div>?
+
+
+
+		<script type="text/javascript">
+		//Loading in the data
+		
+		makeVisualisation()
+		
+		function makeVisualisation() {
+			var dataset;
+
+			d3.csv("week7.csv", function(error, data) {
+
+				if (error) {  //If error is not null, something went wrong.
+				  console.log(error);  //Log the error.
+				} else {      //If no error, the file loaded correctly. Yay!
+				  console.log(data);   //Log the data.
+
+				//Include other code to execute after successful file load here
+				dataset = data
+				data.forEach(function(d) {
+					d.district = d.district;
+					d.prost = parseInt(d.prost);
+					d.theft = parseInt(d.theft)
+					d.year = parseInt(d.year)
+					});
+				
+				var data2003 = data.filter(function(d){return d.year == 2003;})
+				var data2004 = data.filter(function(d){return d.year == 2004;})
+				//testing it gets the data right.
+				/**d3.select("body").selectAll("p")
+					.data(data2003)
+					.enter()
+					.append("p")
+					.text(function(d) {return "curryear " + d.theft;})
+					.style("color", function(d) {
+						if (d > 15) { 
+							return "red";
+						} else {
+							return "black";
+						}
+					}); **/
+				scatterplot(data2003)
+				update(data2004)
+				
+				
+				}
+
+			});
+		}
+		
+		function scatterplot(dataset) {
+		// Setting sizes
+			var w = 1000, h = 400, padding = 70;
+		
+		//Setting up scales
+		
+			xScale = d3.scale.linear()
+				.domain([0, 1000])
+				.range([padding, w - padding * 2]);
+			yScale = d3.scale.linear()
+					.domain([0, 6000])
+					.range([h - padding , padding]);
+					
+            rScale = d3.scale.linear()
+                    .domain([0, d3.max(dataset, function(d) { return d.prost + d.theft; })])
+                    .range([2, 8]);
+
+			//Create SVG element
+			var svg = d3.select("#div1")
+				.append("svg")
+				.attr("width", w)
+				.attr("height", h);
+
+			svg.selectAll("circle")
+			   .data(dataset)
+			   .enter()
+			   .append("circle")
+			   .attr("cx", function(d) {
+			   		return xScale(d.prost);
+			   })
+			   .attr("cy", function(d) {
+			   		return yScale(d.theft);
+			   })
+			   .attr("r", function(d) {
+			   		return rScale(d.prost + d.theft);
+			   });
+
+			svg.selectAll("text")
+			   .data(dataset)
+			   .enter()
+			   .append("text")
+			   .text(function(d) {
+			   		return d.district;
+			   })
+			   .attr("x", function(d) {
+			   		return xScale(d.prost);
+			   })
+			   .attr("y", function(d) {
+			   		return yScale(d.theft);
+			   })
+			   .attr("font-family", "sans-serif")
+			   .attr("font-size", "11px")
+			   .attr("fill", "red");
+		//Setting up the x axis
+		var xAxis = d3.svg.axis()
+			.scale(xScale)
+            .orient("bottom")
+			.ticks(10);
+		svg.append("g")
+			.attr("class", "axis")
+			.attr("transform", "translate(0," + (h - padding) + ")")
+			.call(xAxis);
+
+		//Setting up the y axis
+		var yAxis = d3.svg.axis()
+            .scale(yScale)
+            .orient("left")
+            .ticks(5);
+		//Create Y axis
+		svg.append("g")
+			.attr("class", "axis")
+			.attr("transform", "translate(" + padding + ",0)")
+			.call(yAxis);
+
+		}
+		function update(dataset) {
+			var svg = d3.select("svg")
+			svg.selectAll("circle")
+			   .data(dataset)
+			   .transition()
+			   .duration(5000)
+			   .attr("cx", function(d) {
+			   		return xScale(d.prost);
+			   })
+			   .attr("cy", function(d) {
+			   		return yScale(d.theft);
+			   })
+			   .attr("r", function(d) {
+			   		return rScale(d.prost + d.theft);
+			   });
+
+			svg.selectAll("text")
+			   .data(dataset)
+			   .transition()
+			   .duration(5000)
+			   .text(function(d) {
+			   		return d.district;
+			   })
+			   .attr("x", function(d) {
+			   		return xScale(d.prost);
+			   })
+			   .attr("y", function(d) {
+			   		return yScale(d.theft);
+			   })
+			   .attr("font-family", "sans-serif")
+			   .attr("font-size", "11px")
+			   .attr("fill", "red");
+			}
+			
+			var slide = document.getElementById('slide'),
+				sliderDiv = document.getElementById("sliderAmount");
+
+
+
+
+
+		</script>
+    </body>
+</html>
+
