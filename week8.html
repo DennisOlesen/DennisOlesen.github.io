@@ -28,11 +28,7 @@
 		 </div>
 		<script type="text/javascript">
 			var dataset;
-			var datacent2;
-			var datacent3;
-			var datacent4;
-			var datacent5;
-			var datacent6;
+
 
 		    var colors = d3.scale.category10();
 		    var w = 1000, h = 900
@@ -50,7 +46,7 @@
 			var path = d3.geo.path()
                  .projection(projection);
 
-			d3.json("sfpddistricts.json", function(json) {
+			d3.json("sfpddistricts.geojson", function(json) {
 			    console.log(json);  //Log output to console
 
 				svg.selectAll("path")
