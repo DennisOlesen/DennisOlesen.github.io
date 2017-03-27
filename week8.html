@@ -54,11 +54,11 @@
 
 
 		    var colors = d3.scale.category10();
-		    var w = 9000, h = 800
+		    var w = 900, h = 800
 			var projection = d3.geo.mercator()
 			    .center([-122.433701, 37.767683])
                 .translate([w/2, h/2])
-                .scale([300000]);
+                .scale([250000]);
 
 			var svg = d3.select("#div1")
 				.append("svg")
