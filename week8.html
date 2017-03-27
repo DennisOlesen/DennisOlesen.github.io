@@ -20,15 +20,39 @@
 
 	     <div id="div1"></div>
 		 <div id="div2" style="padding-left:30%">
-			<button type="button" onclick='update(2)'>Click for k2</button>
-			<button type="button" onclick='update(3)'>Click for k3</button>
-			<button type="button" onclick='update(4)'>Click for k4</button>
-			<button type="button" onclick='update(5)'>Click for k5</button>
-			<button type="button" onclick='update(6)'>Click for k6</button>
+			<button type="button" onmouseover="over(2)" onmouseout="out()" onclick='updatek(2)'>Click for k2</button>
+			<button type="button" onmouseover="over(3)" onmouseout="out()" onclick='updatek(3)'>Click for k3</button>
+			<button type="button" onmouseover="over(4)" onmouseout="out()" onclick='updatek(4)'>Click for k4</button>
+			<button type="button" onmouseover="over(5)" onmouseout="out()" onclick='updatek(5)'>Click for k5</button>
+			<button type="button" onmouseover="over(6)" onmouseout="out()" onclick='updatek(6)'>Click for k6</button>
 		 </div>
 		<script type="text/javascript">
-			var dataset;
+		
+			function over(kvalue)
+				{
+					_hoverKvalue = _Kvalue;
+					update(kvalue);
+				}
 
+				function out()
+				{
+					update(_hoverKvalue);
+				}
+
+				function updatek(kvalue)
+				{
+					_hoverKvalue = kvalue;
+					update(kvalue);
+				}
+			var _Kvalue = 2;
+			var _hoverKvalue;
+			
+			var dataset;
+			var datacent2;
+			var datacent3;
+			var datacent4;
+			var datacent5;
+			var datacent6;
 
 		    var colors = d3.scale.category10();
 		    var w = 1000, h = 900
@@ -46,7 +70,7 @@
 			var path = d3.geo.path()
                  .projection(projection);
 
-			d3.json("sfpddistricts.geojson", function(json) {
+			d3.json("sfpddistricts.json", function(json) {
 			    console.log(json);  //Log output to console
 
 				svg.selectAll("path")
@@ -56,10 +80,23 @@
 				   .attr("d", path)
 				   .style("stroke-width", "2")
 				   .style("stroke", "black")
-				   .text("yolo")
+				   .style({'fill': '#B10000', 'fill-opacity': 0.3})
+				   .on('mouseover', function(d, i) {
+						var currentState = this;
+						d3.select(this).style('fill-opacity', .7);
+						})
+				   .on('mouseout', function(d, i) {
+						var currentState = this;
+						d3.select(this).style('fill-opacity', .3);
+						})
+					//})
+				   .text("district")
                    .style("fill", function(d) {
                                return 'lightblue'
 					});
+                   //.style("opacity", function(d) {
+                   //            return .5
+				//	});
 					
 			var labels = svg.append('g').attr('class', 'labels');
 
@@ -166,7 +203,7 @@
 			 svg.selectAll("circle")
 				.data(dataset)
 				.transition()
-				.duration(5000)
+				.duration(1000)
 				.attr("cx", function(d) {
 				return projection([d.lon,d.lat])[0];
 				})
