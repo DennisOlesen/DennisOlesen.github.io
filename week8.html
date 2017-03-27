@@ -47,11 +47,7 @@
 			var _hoverKvalue;
 			
 			var dataset;
-			var datacent2;
-			var datacent3;
-			var datacent4;
-			var datacent5;
-			var datacent6;
+
 
 		    var colors = d3.scale.category10();
 		    var w = 1000, h = 900
@@ -69,7 +65,7 @@
 			var path = d3.geo.path()
                  .projection(projection);
 
-			d3.json("sfpddistricts.json", function(json) {
+			d3.json("sfpddistricts.geojson", function(json) {
 			    console.log(json);  //Log output to console
 
 				svg.selectAll("path")
@@ -93,9 +89,7 @@
                    .style("fill", function(d) {
                                return 'lightblue'
 					});
-                   //.style("opacity", function(d) {
-                   //            return .5
-				//	});
+
 					
 			var labels = svg.append('g').attr('class', 'labels');
 
@@ -118,16 +112,9 @@
 				});
 
 			d3.csv("week8.csv", function(error, data) {
-			console.log(data);  //Log output to console
-			//data.forEach(function(d) {
-			//	d.lat = d.lat;
-			//	d.lon = d.lon;
-			//	});
+			console.log(data);  
 			dataset = data
 					
-			  //console.log(d.lon)
-			  //console.log(d.lat)
-			
 			svg.selectAll("circle")
 			   .data(dataset)
 			   .enter()
